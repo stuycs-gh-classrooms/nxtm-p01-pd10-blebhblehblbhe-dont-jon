@@ -63,8 +63,11 @@ How will your program be controlled? List all keyboard commands and mouse intera
 Keyboard Commands:
 
 a moves paddle left
+
 d moves paddle right
+
 p plays/pauses game
+
 r resets game
 
 Mouse Control:
