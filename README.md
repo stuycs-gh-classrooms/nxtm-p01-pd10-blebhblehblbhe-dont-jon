@@ -78,19 +78,45 @@ Mouse Control:
 ### Classes
 What classes will you be creating for this project? Include the instance variables and methods that you believe you will need. You will be required to create at least 2 different classes. If you are going to use classes similar to those we've made for previous assignments, you will have to add new features to them.
 
-ball class
+Ball class
 - Instance variables:
     PVector center;
+    
     int xspeed;
+    
     int yspeed;
+    
     int bsize;
 - METHODS
-  collisionCheck(Ball other)
+  collisionCheck(Paddle paddle)
+  
   display()
+  
   move()
 
-CLASS NAME1
+Paddle class
 - Instance variables:
-  - LIST INSTANCE VARS HERE
+    PVector center;
+    
+    int psize;
+    
 - METHODS
-  - LIST METHODS HERE
+  move()
+  
+  display()
+  
+  collisionCheck(Ball ball)
+
+  
+Brick class
+- Instance variables:
+    int center;
+    
+    int bsize;
+
+    
+    
+- METHODS
+  display()
+
+  hit()
