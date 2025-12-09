@@ -1,8 +1,7 @@
 # NeXtCS Project 01
-### Period:  
-### Name0: YOUR NAME HERE
-### Name1: TEAMMATE NAME HERE (delete if working solo)
-#### Selected Game: YOUR GAME HERE
+### Period: 10
+### Name0: bryan li
+#### Selected Game: breakout
 ---
 
 ### How To Play
