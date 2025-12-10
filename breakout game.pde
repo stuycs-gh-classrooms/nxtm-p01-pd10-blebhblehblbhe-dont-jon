@@ -53,6 +53,18 @@
 
 }//Ball
 
+class Paddle {
+
+}
+
+class Score {
+
+}
+
+class Brick {
+
+}
+
 Ball[][] grid;
 Ball projectile;
 Ball paddle; // new paddle object
