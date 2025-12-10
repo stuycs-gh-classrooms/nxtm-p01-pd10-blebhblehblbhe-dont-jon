@@ -49,11 +49,13 @@ i would like to have a score mechanism where destroying different colored blocks
 How will you be using arrays in this project?
 
 1D Array:
-- YOUR ANSER HERE
+score
+paddle
 
 2D Array:
 
-ball position
+ball
+bricks
 
 
 ### Controls
