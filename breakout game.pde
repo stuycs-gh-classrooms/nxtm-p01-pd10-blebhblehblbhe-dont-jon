@@ -1,181 +1,166 @@
-  class Ball 
-{
-    //instance variables
-    PVector center;
-    int xspeed;
-    int yspeed;
-    int bsize;
-    color c;
+// ----------------------
+// GLOBALS
+// ----------------------
+Ball ball;
+Paddle paddle;
 
-    //default constructor
-    Ball(PVector p, int s) 
-    {
-  bsize = s;
-  center = new PVector(p.x, p.y);
-    }
+int rows = 5;
+int cols = 10;
+int brickW = 50;
+int brickH = 20;
+boolean[][] bricks;
 
-
-    boolean collisionCheck(Ball other) 
-    {
-  return ( this.center.dist(other.center)
-     <= (this.bsize/2 + other.bsize/2) );
-    }//collisionCheck
-
-
-    void setColor(color newC) 
-    {
-  c = newC;
-    }//setColor
-
-
-    //visual behavior
-    void display() 
-    {
-  fill(c);
-  circle(center.x, center.y, bsize);
-    }//display
-
-
-    //movement behavior
-    void move() 
-    {
-  if (center.x > width - bsize/2 ||
-      center.x < bsize/2) {
-      xspeed*= -1;
-  }
-  if (center.y > height - bsize/2 ||
-      center.y < bsize/2) {
-      yspeed*= -1;
-  }
-  center.x+= xspeed;
-  center.y+= yspeed;
-    }//move
-
-}//Ball
-
-class Paddle {
-
-}
-
-class Score {
-
-}
-
-class Brick {
-
-}
-
-Ball[][] grid;
-Ball projectile;
-Ball paddle; // new paddle object
-int rows = 3;
-int cols = 5;
-int ballSize = 40;
-int pSize = 25;
-int paddleWidth = 80;
-int paddleHeight = 20;
-
+// ----------------------
 void setup() {
-  size(600, 400);
-  grid = new Ball[rows][cols];
-  fill(0);
-  makeBalls(grid);
+  size(500, 500);
 
-  // create paddle at bottom center
-  paddle = new Ball(new PVector(width/2, height - 30), paddleWidth);
-  paddle.yspeed = 0;
-  paddle.xspeed = 0;
+  paddle = new Paddle();
+  ball = new Ball(paddle);
 
-  newProjectile(pSize);
+  bricks = new boolean[rows][cols];
+  for (int r = 0; r < rows; r++) {
+    for (int c = 0; c < cols; c++) {
+      bricks[r][c] = true; 
+    }
+  }
 }
 
+// ----------------------
 void draw() {
-  background(255);
+  background(0);
 
-  drawGrid(grid);
+  // paddle movement
+  paddle.update();
+  paddle.show();
 
-  // draw paddle (Ball shape but flattened)
-  fill(0);
-  rectMode(CENTER);
-  rect(paddle.center.x, paddle.center.y, paddleWidth, paddleHeight);
+  // draw bricks + check collision
+  drawBricks();
 
-  projectile.move();
-  projectile.display();
-
-  processCollisions(projectile, grid);
+  // ball update + show
+  ball.update();
+  ball.show();
 }
 
+// ----------------------
 void keyPressed() {
-
-  // move paddle left/right with A and D
-  if (key == 'a') {
-    paddle.center.x -= 15;
-  }
-  if (key == 'd') {
-    paddle.center.x += 15;
-  }
-
-  // launch projectile upward
+  // launch ball
   if (key == ' ') {
-    projectile.yspeed = -3;
+    ball.stuckToPaddle = false;
   }
 }
 
-void makeBalls(Ball[][] g) {
-  float startX = 200;
-  float startY = 100;
-  for (int r = 0; r < rows; r++) {
-    for (int c = 0; c < cols; c++) {
-      float x = startX + c * ballSize;
-      float y = startY + r * ballSize;
-      Ball b = new Ball(new PVector(x, y), ballSize);
-      g[r][c] = b;
+// ======================================================
+// PADDLE CLASS
+// ======================================================
+class Paddle {
+  float w = 80;
+  float h = 15;
+  float x;
+  float y;
+
+  Paddle() {
+    y = height - 40;
+    x = width/2 - w/2;
+  }
+
+  void update() {
+    // paddle follows mouse
+    x = mouseX - w/2;
+
+    // keep inside screen
+    x = constrain(x, 0, width - w);
+  }
+
+  void show() {
+    fill(255);
+    rect(x, y, w, h);
+  }
+}
+
+// ======================================================
+// BALL CLASS
+// ======================================================
+class Ball {
+  float x, y;
+  float r = 10;
+  float vx = 4;
+  float vy = -4;
+
+  boolean stuckToPaddle = true;   // makes ball follow paddle at start
+  Paddle p;
+
+  Ball(Paddle p_) {
+    p = p_;
+    x = p.x + p.w/2;
+    y = p.y - r;
+  }
+
+  void update() {
+    if (stuckToPaddle) {
+      // follow paddle
+      x = p.x + p.w/2;
+      y = p.y - r;
+      return;
     }
+
+    x += vx;
+    y += vy;
+
+    // bounce walls
+    if (x < r || x > width - r) vx *= -1;
+    if (y < r) vy *= -1;
+
+    // bounce on paddle
+    if (y + r >= p.y && y + r <= p.y + p.h && x > p.x && x < p.x + p.w) {
+      vy *= -1;
+      y = p.y - r;
+    }
+
+    // fall below screen -> reset
+    if (y > height) {
+      stuckToPaddle = true;
+    }
+
+    // brick collision
+    checkBrickHit();
   }
-}
 
-void newProjectile(int psize) {
-  // projectile starts sitting on top of the paddle
-  float x = paddle.center.x;
-  float y = paddle.center.y - 25;
+  void show() {
+    fill(255, 150, 0);
+    ellipse(x, y, r*2, r*2);
+  }
 
-  projectile = new Ball(new PVector(x, y), psize);
-  projectile.xspeed = 0;
-  projectile.yspeed = 0;
-}
+  // check brick collision
+  void checkBrickHit() {
+    for (int r = 0; r < rows; r++) {
+      for (int c = 0; c < cols; c++) {
+        if (bricks[r][c]) {
+          float bx = c * brickW;
+          float by = r * brickH;
 
-void drawGrid(Ball[][] g) {
-  for (int r = 0; r < rows; r++) {
-    for (int c = 0; c < cols; c++) {
-      if (g[r][c] != null) {
-        g[r][c].display();
+          if (x + this.r > bx && x - this.r < bx + brickW && 
+              y + this.r > by && y - this.r < by + brickH) {
+
+            bricks[r][c] = false;
+            vy *= -1;   // bounce
+            return;
+          }
+        }
       }
     }
   }
 }
 
-void processCollisions(Ball p, Ball[][] g) {
-
-  // collision check for paddle
-  if (p.center.y + p.bsize/2 >= paddle.center.y - paddleHeight/2 &&      // vertically touching
-      p.center.y - p.bsize/2 <= paddle.center.y + paddleHeight/2 &&
-      p.center.x >= paddle.center.x - paddleWidth/2 &&                   // horizontally touching
-      p.center.x <= paddle.center.x + paddleWidth/2) 
-  {
-    p.yspeed = -abs(p.yspeed);   // always bounce upward
-  }
-
-  // collision check for bricks
+// ======================================================
+// DRAW BRICKS
+// ======================================================
+void drawBricks() {
   for (int r = 0; r < rows; r++) {
     for (int c = 0; c < cols; c++) {
-      Ball b = g[r][c];
-      if (b != null && p.collisionCheck(b)) {
-        g[r][c] = null;
-        newProjectile(pSize); // reset projectile after hit
-        return;
+      if (bricks[r][c]) {
+        fill(200, 50, 50);
+        rect(c * brickW, r * brickH, brickW, brickH);
       }
     }
   }
 }
-
-
