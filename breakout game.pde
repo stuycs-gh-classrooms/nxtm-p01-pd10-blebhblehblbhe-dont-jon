@@ -3,12 +3,12 @@
 // ----------------------
 Ball ball;
 Paddle paddle;
-
 int rows = 5;
 int cols = 10;
 int brickW = 50;
 int brickH = 20;
 boolean[][] bricks;
+boolean gameStart = false;
 
 // ----------------------
 void setup() {
@@ -43,10 +43,14 @@ void draw() {
 
 // ----------------------
 void keyPressed() {
-  // launch ball
-  if (key == ' ') {
-    ball.stuckToPaddle = false;
-  }
+  if (key == ' ') gameStart = true;
+  if (key == 'a') paddle.left = true;
+  if (key == 'd') paddle.right = true;
+}
+
+void keyReleased() {
+  if (key == 'a') paddle.left = false;
+  if (key == 'd') paddle.right = false;
 }
 
 // ======================================================
@@ -57,6 +61,7 @@ class Paddle {
   float h = 15;
   float x;
   float y;
+  boolean left, right;
 
   Paddle() {
     y = height - 40;
