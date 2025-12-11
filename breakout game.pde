@@ -155,6 +155,17 @@ void drawGrid(Ball[][] g) {
 }
 
 void processCollisions(Ball p, Ball[][] g) {
+
+  // collision check for paddle
+  if (p.center.y + p.bsize/2 >= paddle.center.y - paddleHeight/2 &&      // vertically touching
+      p.center.y - p.bsize/2 <= paddle.center.y + paddleHeight/2 &&
+      p.center.x >= paddle.center.x - paddleWidth/2 &&                   // horizontally touching
+      p.center.x <= paddle.center.x + paddleWidth/2) 
+  {
+    p.yspeed = -abs(p.yspeed);   // always bounce upward
+  }
+
+  // collision check for bricks
   for (int r = 0; r < rows; r++) {
     for (int c = 0; c < cols; c++) {
       Ball b = g[r][c];
@@ -166,4 +177,5 @@ void processCollisions(Ball p, Ball[][] g) {
     }
   }
 }
+
 
