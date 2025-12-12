@@ -96,7 +96,7 @@ class Paddle {
   void update() {
     if (left) x -= speed;
     if (right) x += speed;
-    x = constrain(x, 0, width - w);
+    x = constrain(x, 0, width - w); // keep paddle in game
   }
 
   void show() {
