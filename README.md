@@ -76,6 +76,7 @@ What classes will you be creating for this project? Include the instance variabl
 
 Ball class
 - Instance variables:
+  
   float x;
   
   float y;
@@ -91,6 +92,7 @@ Ball class
   Paddle p;
   
 - METHODS
+  
   Ball(p_);
 
   update();
@@ -101,6 +103,7 @@ Ball class
 
 Paddle class
 - Instance variables:
+  
   float w;
   
   float h;
