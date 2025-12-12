@@ -60,10 +60,6 @@ How will your program be controlled? List all keyboard commands and mouse intera
 
 Keyboard Commands:
 
-a moves paddle left
-
-d moves paddle right
-
 p plays/pauses game
 
 r resets game
@@ -71,7 +67,7 @@ r resets game
 space unsticks ball from paddle
 
 Mouse Control:
-- Mouse movement: nope
+- Mouse movement: paddle follows mouse
 - Mouse pressed: nope
 
 
