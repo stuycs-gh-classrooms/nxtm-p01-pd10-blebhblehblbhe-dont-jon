@@ -49,12 +49,9 @@ i would like to have a score mechanism where destroying different colored blocks
 How will you be using arrays in this project?
 
 1D Array:
-score
-paddle
 
 2D Array:
 
-ball
 bricks
 
 
@@ -71,9 +68,11 @@ p plays/pauses game
 
 r resets game
 
+space unsticks ball from paddle
+
 Mouse Control:
-- Mouse movement: when dragged, paddle follows mouse
-- Mouse pressed: doesn't do anything lol
+- Mouse movement: nope
+- Mouse pressed: nope
 
 
 ### Classes
@@ -81,43 +80,44 @@ What classes will you be creating for this project? Include the instance variabl
 
 Ball class
 - Instance variables:
-    PVector center;
-    
-    int xspeed;
-    
-    int yspeed;
-    
-    int bsize;
+  float x;
+  
+  float y;
+  
+  float r;
+  
+  float vx;
+  
+  float vy;
+  
+  boolean stuckToPaddle;
+  
+  Paddle p;
+  
 - METHODS
-  collisionCheck(Paddle paddle)
+  Ball(p_);
+
+  update();
+
+  show();
   
-  display()
-  
-  move()
+  checkBrickHit();
 
 Paddle class
 - Instance variables:
-    PVector center;
-    
-    int psize;
-    
+  float w;
+  
+  float h;
+  
+  float x;
+  
+  float y;
+  
+  float speed;
+  
 - METHODS
-  move()
+  Paddle();
   
-  display()
+  update();
   
-  collisionCheck(Ball ball)
-
-  
-Brick class
-- Instance variables:
-    int center;
-    
-    int bsize;
-
-    
-    
-- METHODS
-  display()
-
-  hit()
+  show();
